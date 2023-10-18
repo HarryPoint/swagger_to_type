@@ -1,0 +1,21 @@
+{
+  "name": "swger-test",
+  "version": "1.0.0",
+  "description": "访问部署的页面，直接粘贴swagger接口数据",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node ./server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.aiplanck.com:lianghuaigang/swagger_to_type.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.14.2",
+    "koa-static": "^5.0.0"
+  }
+}
