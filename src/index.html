@@ -53,16 +53,16 @@
           run(jsonData);
         });
 
-      fetch("./source/demo.json")
-        .then((res) => res.json())
-        .then((res) => {
-          document.querySelector("#source textarea").value = JSON.stringify(
-            res,
-            null,
-            2
-          );
-          run(res);
-        });
+      // fetch("./source/demo.json")
+      //   .then((res) => res.json())
+      //   .then((res) => {
+      //     document.querySelector("#source textarea").value = JSON.stringify(
+      //       res,
+      //       null,
+      //       2
+      //     );
+      //     run(res);
+      //   });
     </script>
   </body>
 </html>
