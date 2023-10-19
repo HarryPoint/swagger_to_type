@@ -40,89 +40,28 @@
         <textarea></textarea>
       </div>
     </div>
-    <script>
-      const createTypeDefine = (jsonData) => {
-        const transTypeMap = {
-          string: "string",
-          integer: "number",
-          array: "[]",
-        };
-
-        const prefixIndent = (str, indent = 0, step = "  ") => {
-          return `${step.repeat(indent)}${str}`;
-        };
-        const addRow = (str, indent, step) => {
-          return `${prefixIndent(str, indent, step)}\n`;
-        };
-
-        const transProperties = (value, indent, parentDescription = "") => {
-          let str = "";
-          let description = value.description
-            ? `  // ${value.description}`
-            : "";
-
-          if (value.originalRef) {
-            str += `${value.originalRef}`;
-          } else {
-            switch (value.type) {
-              case "object":
-                str += addRow(`{${parentDescription}`);
-                for (const key in value.properties) {
-                  str += addRow(
-                    `${key}: ${transProperties(
-                      value.properties[key],
-                      indent + 2,
-                      description
-                    )}`,
-                    indent + 1
-                  );
-                }
-                str += prefixIndent("}", indent);
-                break;
-              case "array":
-                str += `${transProperties(value.items, indent, description)}${
-                  transTypeMap[value.type]
-                }`;
-                break;
-              default:
-                str += `${transTypeMap[value.type]}`;
-            }
-          }
-          return str;
-        };
-        const transDefineToType = (jsonSchema, indent = 0) => {
-          let str = "";
-          str += addRow(`// ${jsonSchema.title}`, indent);
-          str += addRow(`export type ${jsonSchema.title} = {`, indent);
-          for (const key in jsonSchema.properties) {
-            const value = jsonSchema.properties[key];
-            let description = value.description
-              ? `  // ${value.description}`
-              : "";
-            str += addRow(
-              `${key} : ${transProperties(value, indent + 1)};${
-                ["array", "object"].includes(value.type) ? "" : description
-              }`,
-              indent + 1
-            );
-          }
-          str += addRow(`};`, indent);
-          return str;
-        };
-        const { definitions } = jsonData;
-        let result = "";
-        for (const key in definitions) {
-          const value = definitions[key];
-          result += addRow(`${transDefineToType(value)}`);
-        }
-        return result;
+    <script type="module">
+      import { createTypeDefine } from "./assets/js/transform2ts.js";
+      const run = (jsonData) => {
+        const result = createTypeDefine(jsonData);
+        document.querySelector("#result textarea").value = result;
       };
       document
         .querySelector("#source textarea")
         .addEventListener("change", (evt) => {
           const jsonData = JSON.parse(evt.target.value);
-          const result = createTypeDefine(jsonData);
-          document.querySelector("#result textarea").value = result;
+          run(jsonData);
+        });
+
+      fetch("./source/demo.json")
+        .then((res) => res.json())
+        .then((res) => {
+          document.querySelector("#source textarea").value = JSON.stringify(
+            res,
+            null,
+            2
+          );
+          run(res);
         });
     </script>
   </body>
