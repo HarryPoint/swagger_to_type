@@ -63,7 +63,9 @@ const createTypeDefine = (jsonData, showAnnotation = true) => {
   };
   const transDefineToType = (jsonSchema, indent = 0) => {
     let str = "";
-    str += addRow(`// ${jsonSchema.title}`, indent);
+    if (showAnnotation) {
+      str += addRow(`// ${jsonSchema.title}`, indent);
+    }
     str += transProperties(jsonSchema, {
       indent,
       prefix: `export type ${jsonSchema.title} = `,
