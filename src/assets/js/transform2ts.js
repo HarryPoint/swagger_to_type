@@ -1,4 +1,4 @@
-const createTypeDefine = (jsonData) => {
+const createTypeDefine = (jsonData, showAnnotation = true) => {
   const transTypeMap = {
     string: "string",
     integer: "number",
@@ -33,7 +33,7 @@ const createTypeDefine = (jsonData) => {
             }
             flag = true;
             const desc = getDescription(value.properties[key]);
-            if (desc) {
+            if (desc && showAnnotation) {
               str += addRow(desc, nextIndent);
             }
             str += addRow(

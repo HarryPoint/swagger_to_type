@@ -8,49 +8,75 @@
         margin: 0;
         padding: 0;
       }
-      .container {
-        width: 100%;
+      .container-wrapper {
         height: 100vh;
-        background-color: #fafafa;
         display: flex;
-        justify-content: center;
-        align-items: stretch;
-      }
-      .item {
-        border: solid 2px #eee;
-        width: 50%;
-        white-space: pre-wrap;
-        position: relative;
-      }
-      .item textarea {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        left: 0;
-        top: 0;
+        flex-direction: column;
+        & .config {
+          background-color: #eee;
+          display: flex;
+          justify-content: flex-end;
+          padding: 0 24px;
+        }
+        & .container {
+          background-color: #fafafa;
+          display: flex;
+          justify-content: center;
+          align-items: stretch;
+          flex-grow: 1;
+          & .item {
+            border: solid 2px #eee;
+            width: 50%;
+            white-space: pre-wrap;
+            position: relative;
+            & textarea {
+              width: 100%;
+              height: 100%;
+              position: absolute;
+              left: 0;
+              top: 0;
+            }
+          }
+        }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="item" id="source">
-        <textarea></textarea>
+    <div class="container-wrapper">
+      <div class="config">
+        <label>
+          <input type="checkbox" checked id="showAnnotation" />
+          <span>显示注释</span>
+        </label>
       </div>
-      <div class="item" id="result">
-        <textarea></textarea>
+      <div class="container">
+        <div class="item" id="source">
+          <textarea></textarea>
+        </div>
+        <div class="item" id="result">
+          <textarea></textarea>
+        </div>
       </div>
     </div>
     <script type="module">
       import { createTypeDefine } from "./assets/js/transform2ts.js";
-      const run = (jsonData) => {
-        const result = createTypeDefine(jsonData);
+      let showAnnotation = true;
+      let jsonData = {};
+      const run = () => {
+        const result = createTypeDefine(jsonData, showAnnotation);
         document.querySelector("#result textarea").value = result;
       };
       document
         .querySelector("#source textarea")
         .addEventListener("change", (evt) => {
-          const jsonData = JSON.parse(evt.target.value);
-          run(jsonData);
+          jsonData = JSON.parse(evt.target.value);
+          run();
+        });
+      document
+        .querySelector("#showAnnotation")
+        .addEventListener("change", (evt) => {
+          showAnnotation = evt.target.checked;
+          run();
         });
 
       // fetch("./source/demo.json")
